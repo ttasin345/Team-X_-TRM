@@ -5,52 +5,175 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Global Study Explorer</title>
     <script src="https://cdn.tailwindcss.com"></script>
-
-      <!-- AOS Library -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="js/main.js" defer></script>
-
-    <link rel="stylesheet" href="css/explore.css">
-    <!--favicon-->
-<link rel="icon" href="images/logo.png" type="image/png">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #3a86ff;
+            --secondary: #8338ec;
+            --accent: #ff006e;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        
+        .country-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border-left: 5px solid var(--primary);
+        }
+        
+        .country-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            border-left-color: var(--accent);
+        }
+        
+        .flag-container {
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .flag-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .country-card:hover .flag-container img {
+            transform: scale(1.1);
+        }
+        
+        .badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .popup-content {
+            background: white;
+            width: 80%;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border-radius: 15px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.4s;
+            position: relative;
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(30px); }
+            to { transform: translateY(0); }
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 1;
+            background: rgba(0,0,0,0.1);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        nav {
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(10px);
+        }
+        
+        .progress-container {
+            height: 6px;
+            background: #f0f0f0;
+            position: relative;
+            margin-bottom: 20px;
+        }
+        
+        .progress-bar {
+            position: absolute;
+            height: 100%;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            transition: width 0.3s ease;
+        }
+        
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 10px;
+            border-radius: 5px;
+            background: #e0e0e0;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+    </style>
 </head>
-<body>
-         <!-- Navigation -->
-<header>
-  <nav class="navbar">
-     <a href="index.html" class="logo-link">
-  <div class="logo">
-    <img src="images/logo.png" alt="Scholar's Guild Logo" class="logo-icon">
-    <span class="logo-text">Scholar's Guild</span>
-  </div>
-</a>
+<body class="py-10">
+    <nav class="fixed top-0 w-full z-50 shadow-md">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-600">
+                SCHOLAR's GUILD
+            </div>
 
-    <div class="nav-right">
-      <ul class="nav-tabs">
-        <li><a href="index.html" class="active">Home</a></li>
-        <li><a href="resources.html">Resources</a></li>
-        <li><a href="faq.html">FAQ</a></li>
-        <li><a href="explore.html">Explore</a></li>
-        <li><a href="courses.html">Courses</a></li>
-        <li><a href="contacts.html">Contact</a></li>
-      </ul>
-
-      
-<a href="login.html" class="profile-btn" id="profileIcon">
-  <img src="images/user.jpg" alt="User Profile" class="profile-pic" />
-</a>
-    </div>
-  </nav>
-
-</header>
-
-<main>
-    <!--Mystery button-->
-<a href="explore1.html" id="teleportBtn" title="Blast off!">
-  <span class="icon">🚀</span>
-</a>
+        </div>
+    </nav>
+    
     <div class="container mx-auto px-4 mt-20 mb-16">
         <div class="text-center mb-12">
             <h1 class="text-4xl font-bold mb-4 text-gray-800">Explore Global Study Options</h1>
@@ -266,6 +389,111 @@
                     </div>
                     <div class="progress-container">
                         <div class="progress-bar" style="width: 65%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Austria -->
+            <div class="country-card" onclick="showPopup('austria')">
+                <div class="flag-container">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Flag_of_Austria.svg/1280px-Flag_of_Austria.svg.png" alt="Austrian flag waving" class="rounded-lg mb-4">
+                    <div class="badge">EU Option</div>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-2xl font-bold mb-2 text-gray-800">Austria</h3>
+                    <div class="flex items-center mb-4">
+                        <div class="flex mr-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.799-2.034a1 1 0 00-1.175 0l-2.799 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                            </svg>
+                            <span class="ml-1">4.5</span>
+                        </div>
+                        <div class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            </svg>
+                            <span class="ml-1">Student Visa</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">
+                        Austria offers a high-quality education system with a rich cultural heritage, often with affordable tuition for EU/EEA students and reasonable costs for others.
+                    </p>
+                    <div class="flex justify-between text-sm text-gray-500 mb-2">
+                        <span>Application Time:</span>
+                        <span>3-5 months</span>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 70%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Netherlands -->
+            <div class="country-card" onclick="showPopup('netherlands')">
+                <div class="flag-container">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Flag_of_the_Netherlands.svg/1280px-Flag_of_the_Netherlands.svg.png" alt="Dutch flag waving" class="rounded-lg mb-4">
+                    <div class="badge">Innovation Hub</div>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-2xl font-bold mb-2 text-gray-800">Netherlands</h3>
+                    <div class="flex items-center mb-4">
+                        <div class="flex mr-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.799-2.034a1 1 0 00-1.175 0l-2.799 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                            </svg>
+                            <span class="ml-1">4.6</span>
+                        </div>
+                        <div class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            </svg>
+                            <span class="ml-1">Student Visa</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">
+                        The Netherlands is known for its innovative teaching methods, numerous English-taught programs, and a welcoming environment for international students.
+                    </p>
+                    <div class="flex justify-between text-sm text-gray-500 mb-2">
+                        <span>Application Time:</span>
+                        <span>3-6 months</span>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 75%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Denmark -->
+            <div class="country-card" onclick="showPopup('denmark')">
+                <div class="flag-container">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Flag_of_Denmark.svg/1280px-Flag_of_Denmark.svg.png" alt="Danish flag waving" class="rounded-lg mb-4">
+                    <div class="badge">Nordic Quality</div>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-2xl font-bold mb-2 text-gray-800">Denmark</h3>
+                    <div class="flex items-center mb-4">
+                        <div class="flex mr-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.799-2.034a1 1 0 00-1.175 0l-2.799 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                            </svg>
+                            <span class="ml-1">4.3</span>
+                        </div>
+                        <div class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            </svg>
+                            <span class="ml-1">Student Visa</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">
+                        Denmark offers high-quality, research-based education, particularly strong in design, engineering, and environmental studies, with a high standard of living.
+                    </p>
+                    <div class="flex justify-between text-sm text-gray-500 mb-2">
+                        <span>Application Time:</span>
+                        <span>4-7 months</span>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 60%"></div>
                     </div>
                 </div>
             </div>
@@ -1221,7 +1449,455 @@
             </div>
         </div>
     </div>
-</main>
+
+    <!-- Austria Popup -->
+    <div id="austria-popup" class="popup">
+        <div class="popup-content">
+            <span class="close-btn" onclick="hidePopup()">&times;</span>
+            <div class="p-8">
+                <div class="flex items-start">
+                    <div class="w-1/3 pr-8">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Flag_of_Austria.svg/1280px-Flag_of_Austria.svg.png" alt="Austrian flag waving" class="rounded-lg mb-4">
+                        <div class="bg-gray-100 p-4 rounded-lg">
+                            <h4 class="font-bold mb-2">Quick Facts</h4>
+                            <ul class="text-sm">
+                                <li class="mb-1"><span class="font-medium">Capital:</span> Vienna</li>
+                                <li class="mb-1"><span class="font-medium">Population:</span> 9 million</li>
+                                <li class="mb-1"><span class="font-medium">Official Language:</span> German</li>
+                                <li class="mb-1"><span class="font-medium">Currency:</span> Euro (EUR)</li>
+                                <li class="mb-1"><span class="font-medium">Average Tuition:</span> €0-€1,454/year (public, non-EU higher)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="w-2/3">
+                        <h2 class="text-3xl font-bold mb-4 text-blue-800">Study in Austria</h2>
+                        <div class="flex mb-6">
+                            <button class="tab-btn active px-4 py-2 bg-blue-600 text-white rounded-l-lg" data-tab="at-overview">Overview</button>
+                            <button class="tab-btn px-4 py-2 bg-gray-200" data-tab="at-requirements">Requirements</button>
+                            <button class="tab-btn px-4 py-2 bg-gray-200" data-tab="at-pathways">Pathways</button>
+                            <button class="tab-btn px-4 py-2 bg-gray-200 rounded-r-lg" data-tab="at-costs">Costs</button>
+                        </div>
+                        
+                        <div class="tab-content active" id="at-overview">
+                            <p class="mb-4">Austria offers a high-quality education system with a rich cultural heritage, known for its strong traditions in arts, music, and science. Public universities are often tuition-free for EU/EEA students, making it an attractive option within Europe.</p>
+                            <p class="mb-4">International students can benefit from a vibrant student life, beautiful cities, and a central location in Europe, providing easy access to other countries. Post-study work opportunities are available.</p>
+                            <h3 class="text-xl font-bold mt-6 mb-3 text-blue-700">Key Benefits</h3>
+                            <ul class="list-disc pl-5 mb-6">
+                                <li class="mb-2">Affordable tuition fees at public universities for EU/EEA students</li>
+                                <li class="mb-2">High quality of life and safe environment</li>
+                                <li class="mb-2">Rich cultural heritage and historical cities</li>
+                                <li class="mb-2">Central location in Europe for travel</li>
+                                <li class="mb-2">Post-study work opportunities via Red-White-Red Card</li>
+                            </ul>
+                            <h3 class="text-xl font-bold mt-6 mb-3 text-blue-700">Popular Study Fields</h3>
+                            <p class="mb-4">Popular fields include Business, Engineering, Arts, Music, and Tourism, with Vienna being a major academic and cultural hub.</p>
+                        </div>
+                        
+                        <div class="tab-content" id="at-requirements">
+                            <h3 class="text-xl font-bold mt-4 mb-3 text-blue-700">Visa & Residence Permit Requirements</h3>
+                            <p class="mb-4">Non-EU/EEA students typically require a Visa D for stays over 90 days, followed by a student residence permit ("Aufenthaltsbewilligung – Student") obtained after arrival.</p>
+                            <table class="w-full mb-6">
+                                <thead class="bg-blue-100">
+                                    <tr>
+                                        <th class="text-left p-3">Factor</th>
+                                        <th class="text-left p-3">Minimum Requirement</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b">
+                                        <td class="p-3">University Admission</td>
+                                        <td class="p-3">Letter of admission from an Austrian university</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="p-3">Proof of Funds</td>
+                                        <td class="p-3">Sufficient funds for living costs (e.g., €600-€1,000/month)</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="p-3">Health Insurance</td>
+                                        <td class="p-3">Valid travel health insurance or national health insurance</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="p-3">Accommodation Proof</td>
+                                        <td class="p-3">Proof of accommodation in Austria</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="p-3">No-Criminal-Record</td>
+                                        <td class="p-3">Certificate of good conduct</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p class="mb-4">Additional requirement: Register locally upon arrival (Meldeamt) within a few days.</p>
+                        </div>
+                        
+                        <div class="tab-content" id="at-pathways">
+                            <h3 class="text-xl font-bold mt-4 mb-3 text-blue-700">Study Pathways</h3>
+                            <div class="grid grid-cols-2 gap-4 mb-6">
+                                <div class="border p-4 rounded-lg hover:border-blue-500 transition">
+                                    <h4 class="font-bold mb-2">Bachelor's Programs</h4>
+                                    <p class="text-sm">Undergraduate degrees across various disciplines.</p>
+                                </div>
+                                <div class="border p-4 rounded-lg hover:border-blue-500 transition">
+                                    <h4 class="font-bold mb-2">Master's Programs</h4>
+                                    <p class="text-sm">Postgraduate degrees for advanced studies.</p>
+                                </div>
+                                <div class="border p-4 rounded-lg hover:border-blue-500 transition">
+                                    <h4 class="font-bold mb-2">PhD Programs</h4>
+                                    <p class="text-sm">Doctoral research opportunities.</p>
+                                </div>
+                                <div class="border p-4 rounded-lg hover:border-blue-500 transition">
+                                    <h4 class="font-bold mb-2">University of Applied Sciences (FH)</h4>
+                                    <p class="text-sm">Practical, career-oriented programs.</p>
+                                </div>
+                                <div class="border p-4 rounded-lg hover:border-blue-500 transition">
+                                    <h4 class="font-bold mb-2">Language Courses</h4>
+                                    <p class="text-sm">German language courses for academic preparation.</p>
+                                </div>
+                                <div class="border p-4 rounded-lg hover:border-blue-500 transition">
+                                    <h4 class="font-bold mb-2">Red-White-Red Card</h4>
+                                    <p class="text-sm">Post-graduation permit to seek employment in Austria.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="tab-content" id="at-costs">
+                            <h3 class="text-xl font-bold mt-4 mb-3 text-blue-700">Estimated Costs</h3>
+                            <table class="w-full mb-6">
+                                <thead class="bg-blue-100">
+                                    <tr>
+                                        <th class="text-left p-3">Fee</th>
+                                        <th class="text-left p-3">Amount (EUR)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b">
+                                        <td class="p-3">Tuition Fees (Public, non-EU/EEA, per year)</td>
+                                        <td class="p-3">€1,454 - €1,500</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="p-3">Tuition Fees (Private, per year)</td>
+                                        <td class="p-3">€3,000 - €23,000</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="p-3">Student Union Fee (per semester)</td>
+                                        <td class="p-3">~€20</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="p-3">Visa D Application Fee</td>
+                                        <td class="p-3">~€120</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="p-3">Living Expenses (per year)</td>
+                                        <td class="p-3">€7,200 - €12,000</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p class="mb-4">Total estimated annual cost: €8,600 - €35,000+ EUR (highly variable based on university type)</p>
+                            <p class="text-sm text-gray-600">Note: Costs vary significantly by institution, program, and city. These are estimates only.</p>
+                        </div>
+                        <button class="mt-6 bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:scale-105" onclick="bookAppointment('austria')">Book Appointment</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Netherlands Popup -->
+    <div id="netherlands-popup" class="popup">
+        <div class="popup-content">
+            <span class="close-btn" onclick="hidePopup()">&times;</span>
+            <div class="p-8">
+                <div class="flex items-start">
+                    <div class="w-1/3 pr-8">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Flag_of_the_Netherlands.svg/1280px-Flag_of_the_Netherlands.svg.png" alt="Dutch flag waving" class="rounded-lg mb-4">
+                        <div class="bg-gray-100 p-4 rounded-lg">
+                            <h4 class="font-bold mb-2">Quick Facts</h4>
+                            <ul class="text-sm">
+                                <li class="mb-1"><span class="font-medium">Capital:</span> Amsterdam</li>
+                                <li class="mb-1"><span class="font-medium">Population:</span> 17 million</li>
+                                <li class="mb-1"><span class="font-medium">Official Language:</span> Dutch</li>
+                                <li class="mb-1"><span class="font-medium">Currency:</span> Euro (EUR)</li>
+                                <li class="mb-1"><span class="font-medium">Average Tuition:</span> €7,500-20,000/year (non-EU)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="w-2/3">
+                        <h2 class="text-3xl font-bold mb-4 text-blue-800">Study in Netherlands</h2>
+                        <div class="flex mb-6">
+                            <button class="tab-btn active px-4 py-2 bg-blue-600 text-white rounded-l-lg" data-tab="nl-overview">Overview</button>
+                            <button class="tab-btn px-4 py-2 bg-gray-200" data-tab="nl-requirements">Requirements</button>
+                            <button class="tab-btn px-4 py-2 bg-gray-200" data-tab="nl-pathways">Pathways</button>
+                            <button class="tab-btn px-4 py-2 bg-gray-200 rounded-r-lg" data-tab="nl-costs">Costs</button>
+                        </div>
+                        
+                        <div class="tab-content active" id="nl-overview">
+                            <p class="mb-4">The Netherlands is a popular destination for international students, offering a wide range of English-taught programs and a strong focus on interactive and problem-based learning. Dutch universities are highly ranked globally.</p>
+                            <p class="mb-4">The country boasts a high quality of life, a multicultural society, and excellent infrastructure. Graduates can often benefit from a "zoekjaar" (orientation year) visa to seek employment after their studies.</p>
+                            <h3 class="text-xl font-bold mt-6 mb-3 text-blue-700">Key Benefits</h3>
+                            <ul class="list-disc pl-5 mb-6">
+                                <li class="mb-2">Large number of English-taught programs</li>
+                                <li class="mb-2">Innovative teaching methods and research opportunities</li>
+                                <li class="mb-2">High quality of life and safe environment</li>
+                                <li class="mb-2">Multicultural and tolerant society</li>
+                                <li class="mb-2">Post-study work opportunities (zoekjaar visa)</li>
+                            </ul>
+                            <h3 class="text-xl font-bold mt-6 mb-3 text-blue-700">Popular Study Fields</h3>
+                            <p class="mb-4">Popular fields include Engineering, Business, Arts, Social Sciences, and Agriculture, with strong connections to international industries.</p>
+                        </div>
+                        
+                        <div class="tab-content" id="nl-requirements">
+                            <h3 class="text-xl font-bold mt-4 mb-3 text-blue-700">Visa & Residence Permit Requirements</h3>
+                            <p class="mb-4">Non-EU/EEA students generally require a visa (MVV) and/or a residence permit. Your host institution usually applies for these on your behalf.</p>
+                            <table class="w-full mb-6">
+                                <thead class="bg-blue-100">
+                                    <tr>
+                                        <th class="text-left p-3">Factor</th>
+                                        <th class="text-left p-3">Minimum Requirement</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b">
+                                        <td class="p-3">Admission Letter</td>
+                                        <td class="p-3">From a recognized Dutch educational institution</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="p-3">Proof of Funds</td>
+                                        <td class="p-3">Sufficient funds for living expenses (approx. €1,000/month)</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="p-3">English Proficiency</td>
+                                        <td class="p-3">IELTS/TOEFL scores (varies by program, typically IELTS 6.0-6.5)</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="p-3">Academic Qualifications</td>
+                                        <td class="p-3">Relevant previous diplomas/degrees</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="p-3">Health Insurance</td>
+                                        <td class="p-3">Valid health insurance for the duration of stay</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p class="mb-4">Note: Specific requirements and application procedures can vary. Always check with the Dutch Immigration and Naturalisation Service (IND) and your chosen institution.</p>
+                        </div>
+                        
+                        <div class="tab-content" id="nl-pathways">
+                            <h3 class="text-xl font-bold mt-4 mb-3 text-blue-700">Study Pathways</h3>
+                            <div class="grid grid-cols-2 gap-4 mb-6">
+                                <div class="border p-4 rounded-lg hover:border-blue-500 transition">
+                                    <h4 class="font-bold mb-2">Research Universities</h4>
+                                    <p class="text-sm">Focus on academic research and theoretical knowledge (Bachelor's, Master's, PhD).</p>
+                                </div>
+                                <div class="border p-4 rounded-lg hover:border-blue-500 transition">
+                                    <h4 class="font-bold mb-2">Universities of Applied Sciences (HBO)</h4>
+                                    <p class="text-sm">Focus on practical skills and professional preparation (Bachelor's, Master's).</p>
+                                </div>
+                                <div class="border p-4 rounded-lg hover:border-blue-500 transition">
+                                    <h4 class="font-bold mb-2">Foundation Year Programs</h4>
+                                    <p class="text-sm">Preparatory courses for international students to meet entry requirements.</p>
+                                </div>
+                                <div class="border p-4 rounded-lg hover:border-blue-500 transition">
+                                    <h4 class="font-bold mb-2">Pre-Master's Programs</h4>
+                                    <p class="text-sm">Bridging programs for students whose Bachelor's degree doesn't directly qualify for a Master's.</p>
+                                </div>
+                                <div class="border p-4 rounded-lg hover:border-blue-500 transition">
+                                    <h4 class="font-bold mb-2">Orientation Year (Zoekjaar) Visa</h4>
+                                    <p class="text-sm">Allows graduates to stay for up to one year to find a job.</p>
+                                </div>
+                                <div class="border p-4 rounded-lg hover:border-blue-500 transition">
+                                    <h4 class="font-bold mb-2">PhD Programs</h4>
+                                    <p class="text-sm">Doctoral research opportunities, often as paid positions.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="tab-content" id="nl-costs">
+                            <h3 class="text-xl font-bold mt-4 mb-3 text-blue-700">Estimated Costs</h3>
+                            <table class="w-full mb-6">
+                                <thead class="bg-blue-100">
+                                    <tr>
+                                        <th class="text-left p-3">Fee</th>
+                                        <th class="text-left p-3">Amount (EUR)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b">
+                                        <td class="p-3">Tuition Fees (Bachelor's, non-EU/EEA, per year)</td>
+                                        <td class="p-3">€7,500 - €15,000</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="p-3">Tuition Fees (Master's, non-EU/EEA, per year)</td>
+                                        <td class="p-3">€13,000 - €20,000+</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="p-3">Living Expenses (per year)</td>
+                                        <td class="p-3">€10,000 - €14,000</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="p-3">Visa/Residence Permit Application Fee</td>
+                                        <td class="p-3">~€200</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="p-3">Health Insurance (per month)</td>
+                                        <td class="p-3">€100 - €120</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p class="mb-4">Total estimated annual cost: €18,000 - €35,000+ EUR</p>
+                            <p class="text-sm text-gray-600">Note: Costs vary significantly by institution, program, and city. These are estimates only.</p>
+                        </div>
+                        <button class="mt-6 bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:scale-105" onclick="bookAppointment('netherlands')">Book Appointment</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Denmark Popup -->
+    <div id="denmark-popup" class="popup">
+        <div class="popup-content">
+            <span class="close-btn" onclick="hidePopup()">&times;</span>
+            <div class="p-8">
+                <div class="flex items-start">
+                    <div class="w-1/3 pr-8">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Flag_of_Denmark.svg/1280px-Flag_of_Denmark.svg.png" alt="Danish flag waving" class="rounded-lg mb-4">
+                        <div class="bg-gray-100 p-4 rounded-lg">
+                            <h4 class="font-bold mb-2">Quick Facts</h4>
+                            <ul class="text-sm">
+                                <li class="mb-1"><span class="font-medium">Capital:</span> Copenhagen</li>
+                                <li class="mb-1"><span class="font-medium">Population:</span> 6 million</li>
+                                <li class="mb-1"><span class="font-medium">Official Language:</span> Danish</li>
+                                <li class="mb-1"><span class="font-medium">Currency:</span> Danish Krone (DKK)</li>
+                                <li class="mb-1"><span class="font-medium">Average Tuition:</span> €6,000-16,000/year (non-EU)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="w-2/3">
+                        <h2 class="text-3xl font-bold mb-4 text-blue-800">Study in Denmark</h2>
+                        <div class="flex mb-6">
+                            <button class="tab-btn active px-4 py-2 bg-blue-600 text-white rounded-l-lg" data-tab="dk-overview">Overview</button>
+                            <button class="tab-btn px-4 py-2 bg-gray-200" data-tab="dk-requirements">Requirements</button>
+                            <button class="tab-btn px-4 py-2 bg-gray-200" data-tab="dk-pathways">Pathways</button>
+                            <button class="tab-btn px-4 py-2 bg-gray-200 rounded-r-lg" data-tab="dk-costs">Costs</button>
+                        </div>
+                        
+                        <div class="tab-content active" id="dk-overview">
+                            <p class="mb-4">Denmark offers a high-quality, research-based education system with a strong focus on innovation, sustainability, and interdisciplinary studies. Public universities are tuition-free for EU/EEA students.</p>
+                            <p class="mb-4">Known for its high standard of living, strong social welfare system, and a focus on work-life balance, Denmark provides a safe and modern environment for international students. Post-study work opportunities are available.</p>
+                            <h3 class="text-xl font-bold mt-6 mb-3 text-blue-700">Key Benefits</h3>
+                            <ul class="list-disc pl-5 mb-6">
+                                <li class="mb-2">Tuition-free public universities for EU/EEA students</li>
+                                <li class="mb-2">High-quality, research-intensive education</li>
+                                <li class="mb-2">Focus on innovation, sustainability, and green solutions</li>
+                                <li class="mb-2">High standard of living and safe society</li>
+                                <li class="mb-2">Post-study work opportunities</li>
+                            </ul>
+                            <h3 class="text-xl font-bold mt-6 mb-3 text-blue-700">Popular Study Fields</h3>
+                            <p class="mb-4">Popular fields include Engineering, IT, Design, Architecture, Environmental Sciences, and Business, often with a strong emphasis on practical application.</p>
+                        </div>
+                        
+                        <div class="tab-content" id="dk-requirements">
+                            <h3 class="text-xl font-bold mt-4 mb-3 text-blue-700">Residence Permit Requirements</h3>
+                            <p class="mb-4">Non-EU/EEA students need to apply for a residence permit for studies before arriving in Denmark. The application is typically submitted online.</p>
+                            <table class="w-full mb-6">
+                                <thead class="bg-blue-100">
+                                    <tr>
+                                        <th class="text-left p-3">Factor</th>
+                                        <th class="text-left p-3">Minimum Requirement</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b">
+                                        <td class="p-3">Admission Letter</td>
+                                        <td class="p-3">From a Danish educational institution</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="p-3">Proof of Funds</td>
+                                        <td class="p-3">Sufficient funds for living costs (approx. DKK 6,500/month)</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="p-3">English Proficiency</td>
+                                        <td class="p-3">IELTS/TOEFL scores (varies by program, typically IELTS 6.5)</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="p-3">Accommodation Proof</td>
+                                        <td class="p-3">Proof of accommodation in Denmark</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="p-3">Travel Insurance</td>
+                                        <td class="p-3">Valid travel insurance until covered by Danish health insurance</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p class="mb-4">Note: Students may be eligible for the Danish State Educational Grant (SU) under certain conditions, often requiring equal status with Danish citizens.</p>
+                        </div>
+                        
+                        <div class="tab-content" id="dk-pathways">
+                            <h3 class="text-xl font-bold mt-4 mb-3 text-blue-700">Study Pathways</h3>
+                            <div class="grid grid-cols-2 gap-4 mb-6">
+                                <div class="border p-4 rounded-lg hover:border-blue-500 transition">
+                                    <h4 class="font-bold mb-2">University Degrees</h4>
+                                    <p class="text-sm">Bachelor's, Master's, and PhD programs at research universities.</p>
+                                </div>
+                                <div class="border p-4 rounded-lg hover:border-blue-500 transition">
+                                    <h4 class="font-bold mb-2">University Colleges (Professionshøjskoler)</h4>
+                                    <p class="text-sm">Professionally oriented Bachelor's degrees.</p>
+                                </div>
+                                <div class="border p-4 rounded-lg hover:border-blue-500 transition">
+                                    <h4 class="font-bold mb-2">Academies of Professional Higher Education (Erhvervsakademier)</h4>
+                                    <p class="text-sm">Academy Profession (AP) degrees and professional Bachelor's degrees.</p>
+                                </div>
+                                <div class="border p-4 rounded-lg hover:border-blue-500 transition">
+                                    <h4 class="font-bold mb-2">Guest/Exchange Programs</h4>
+                                    <p class="text-sm">Short-term study opportunities for international students.</p>
+                                </div>
+                                <div class="border p-4 rounded-lg hover:border-blue-500 transition">
+                                    <h4 class="font-bold mb-2">Job Search Visa</h4>
+                                    <p class="text-sm">Allows graduates to stay for 6 months to seek employment.</p>
+                                </div>
+                                <div class="border p-4 rounded-lg hover:border-blue-500 transition">
+                                    <h4 class="font-bold mb-2">PhD Programs</h4>
+                                    <p class="text-sm">Doctoral research opportunities, often as paid positions.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="tab-content" id="dk-costs">
+                            <h3 class="text-xl font-bold mt-4 mb-3 text-blue-700">Estimated Costs</h3>
+                            <table class="w-full mb-6">
+                                <thead class="bg-blue-100">
+                                    <tr>
+                                        <th class="text-left p-3">Fee</th>
+                                        <th class="text-left p-3">Amount (DKK/EUR)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b">
+                                        <td class="p-3">Tuition Fees (non-EU/EEA, per year)</td>
+                                        <td class="p-3">DKK 45,000 - DKK 120,000 (€6,000 - €16,000)</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="p-3">Living Expenses (per year)</td>
+                                        <td class="p-3">DKK 108,000 (~€14,400)</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="p-3">Residence Permit Application Fee</td>
+                                        <td class="p-3">~DKK 2,000 - DKK 3,000 (~€270 - €400)</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="p-3">Health Insurance (initial, if not covered)</td>
+                                        <td class="p-3">Variable</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p class="mb-4">Total estimated annual cost: DKK 153,000 - DKK 228,000+ (~€20,400 - €30,400+)</p>
+                            <p class="text-sm text-gray-600">Note: Tuition fees are for non-EU/EEA students. Living costs are estimates and can vary by city and lifestyle.</p>
+                        </div>
+                        <button class="mt-6 bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:scale-105" onclick="bookAppointment('denmark')">Book Appointment</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         function showPopup(country) {
@@ -1353,42 +2029,6 @@
                 }
             });
         });
-        const btn = document.getElementById("teleportBtn");
-
-  function randomCorner() {
-    const corners = [
-      { top: "20px", left: "20px" },
-      { top: "20px", right: "20px" },
-      { bottom: "20px", left: "20px" },
-      { bottom: "20px", right: "20px" }
-    ];
-
-    const random = corners[Math.floor(Math.random() * corners.length)];
-
-    // Reset all positions
-    btn.style.top = "";
-    btn.style.bottom = "";
-    btn.style.left = "";
-    btn.style.right = "";
-
-    // Apply new position
-    Object.entries(random).forEach(([key, value]) => {
-      btn.style[key] = value;
-    });
-
-    // Schedule next move
-    const nextInterval = Math.floor(Math.random() * 5000) + 5000; // 5–10 sec
-    setTimeout(randomCorner, nextInterval);
-  }
-
-  // Start movement
-  randomCorner();
-
     </script>
-<!-- Footer -->
-    <footer>
-        <p>&copy; 2025 Scholar's Guild | <span id="currentDate"></span></p>
-    </footer>
-
 </body>
 </html>
