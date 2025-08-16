@@ -1,0 +1,66 @@
+/* ===== Base ===== */
+:root {
+  --brand: rgb(55,115,212);
+  --brand-dark: #1b0e7e;
+  --border: #ccc;
+  h1, h2 {
+  color: var(--text);
+  text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.4);
+}
+  --muted: #666;
+}
+*{box-sizing:border-box}
+body{
+  max-width:1000px; margin:2rem auto; padding:1rem;
+  font-family:Arial, sans-serif;
+  background:linear-gradient(120deg,#181818 0%,#fff 100%);
+  min-height:100vh;
+}
+nav{
+  display:flex; gap:.75rem; margin-bottom:1rem;
+  background:#ffffff00; padding:.6rem .8rem; border-radius:8px; /*Made color transparent*/
+  box-shadow:0 2px 8px rgba(0,0,0,.05);
+}
+nav a{ text-decoration:none; color:#183153; padding:.35rem .6rem; border-radius:6px }
+nav a:hover, nav a:focus{ background:#eef3ff }
+
+main>section{
+  margin-bottom:2rem; background:#ffffff00; border-radius:8px; /*Made color transparent*/
+  box-shadow:0 2px 8px rgba(0,0,0,.05); padding:1.5rem;
+}
+
+h1,h2{color:var(--text)}
+.muted{color:var(--muted)}
+
+/* ===== Courses ===== */
+.grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1rem }
+.course-card{
+  border:1px solid var(--border); border-radius:8px; padding:1rem; background:#ffffff; /*Made color transparent*/
+  transition:transform .2s, box-shadow .2s;
+}
+.course-card:hover,.course-card:focus-within{ transform:translateY(-4px); box-shadow:0 6px 14px rgba(0,0,0,.1) }
+.details{ display:none; margin-top:.5rem }
+button{ background:var(--brand); color:#ffffff; border:0; padding:.5rem 1rem; border-radius:6px; cursor:pointer }
+button:hover,button:focus{ background:var(--brand-dark) }
+
+/* ===== Forms ===== */
+.field{ margin-bottom:1rem }
+label{ display:block; margin-bottom:.35rem }
+input,select,textarea{
+  width:100%; padding:.55rem; border:1px solid #aaa; border-radius:6px; font-size:1rem
+}
+input:focus,select:focus,textarea:focus{ outline:2px solid var(--brand) }
+.error{ color:#c00; font-size:.9rem; display:none }
+.notice{ margin-top:1rem; padding:.75rem; background:#eaf7ea; border:1px solid #6cc36c; border-radius:6px }
+#time{ font-size:.95rem; color:var(--muted); margin-top:.5rem }
+/* Media inside course cards */
+.card-media{ margin:0 0 .75rem 0 }
+.card-img{
+  width:100%;
+  aspect-ratio: 16 / 9;   /* consistent height */
+  object-fit: cover;      /* smart crop */
+  border-radius: 6px;
+  display:block;
+}
+/* If you want images to clip to card corners */
+.course-card{ overflow:hidden; }
